@@ -1,0 +1,63 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Package Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+
+<body class="h-screen flex justify-center items-center bg-gray-200">
+    <div class="max-w-md p-4 bg-white rounded shadow-md">
+        <h1 class="text-3xl font-bold mb-4">Package Tracker</h1>
+        <form id="trackingForm" class="flex flex-col">
+            <input type="text" name="trackingNumber" placeholder="Enter tracking number"
+                class="p-2 pl-10 text-sm text-gray-600">
+            <button type="submit" class="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Track
+                Package</button>
+        </form>
+        <div id="result" class="mt-4 text-gray-600"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#trackingForm').on('submit', function (e) {
+                e.preventDefault();
+                var trackingNumber = $('input[name="trackingNumber"]').val();
+                if (trackingNumber.trim() === '') {
+                    $('#result').text('Please enter a tracking number.');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/track',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        trackingNumber: trackingNumber
+                    }),
+                    beforeSend: function () {
+                        $('#result').text('Loading...');
+                    },
+                    success: function (response) {
+                        if (response.details && response.details.length > 0) {
+                            let formattedResult = response.details.map(detail => `<p>${detail}</p>`).join('');
+                            $('#result').html(formattedResult);
+                        } else {
+                            $('#result').text('No details found for this tracking number.');
+                        }
+                    },
+                    error: function (error) {
+                        $('#result').text('Error: ' + error.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
