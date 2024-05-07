@@ -7,8 +7,8 @@ load_dotenv()
 
 app = Flask(__name__)  # Crea una instancia de la aplicación Flask
 
-api_key = os.environ.get("API_KEY")
-print(f"API Key: {api_key}")
+API_KEY = os.environ.get("API_KEY")
+print(f"API Key: {API_KEY}")
 
 # Ruta para el aplicativo principal
 @app.route('/')
@@ -17,7 +17,7 @@ def index():
 
 @app.route('/track', methods=['POST'])
 def track():
-    if not request.headers.get('x-api-key') == api_key:  # Corrige el nombre de la variable
+    if not request.headers.get('x-api-key') == API_KEY:   
         return jsonify({"status": "error", "message": "Invalid API key"}), 403
 
     try:
