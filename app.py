@@ -1,7 +1,9 @@
+import os
 from flask import Flask, jsonify, request, render_template
 import tracker
 
 app = Flask(__name__)
+API_KEY = os.getenv('API_KEY')
 
 @app.route('/')
 def index():
@@ -9,6 +11,9 @@ def index():
 
 @app.route('/track', methods=['POST'])
 def track():
+    if not request.headers.get('x-api-key') == API_KEY:
+        return jsonify({"status": "error", "message": "Invalid API key"}), 403
+
     try:
         data = request.get_json()
         tracking_number = data['trackingNumber']
@@ -18,4 +23,4 @@ def track():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
