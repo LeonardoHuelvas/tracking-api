@@ -2,10 +2,13 @@ import os
 from flask import Flask, jsonify, request, render_template
 import tracker
 from dotenv import load_dotenv
-load_dotenv() 
 
-app = Flask(__name__)
-API_KEY = os.getenv('API_KEY')
+load_dotenv()
+
+app = Flask(__name__)  # Crea una instancia de la aplicación Flask
+
+api_key = os.environ.get("API_KEY")
+print(f"API Key: {api_key}")
 
 @app.route('/')
 def index():
@@ -13,7 +16,7 @@ def index():
 
 @app.route('/track', methods=['POST'])
 def track():
-    if not request.headers.get('x-api-key') == API_KEY:
+    if not request.headers.get('x-api-key') == api_key:  # Corrige el nombre de la variable
         return jsonify({"status": "error", "message": "Invalid API key"}), 403
 
     try:
