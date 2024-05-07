@@ -1,4 +1,5 @@
 import os
+import time
 import random
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -7,60 +8,84 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import WebDriverException, TimeoutException
+from selenium.common.exceptions import WebDriverException
 
-# Load environment variables from.env file
+# Carga las variables de entorno del archivo .env
 from dotenv import load_dotenv
 load_dotenv()
 
-
 def track_package(tracking_number):
-    # Configure WebDriver
-    driver_path = os.getenv('CHROMEDRIVER_PATH', 'default_path_if_not_set')
+    driver_path = os.getenv('CHROMEDRIVER_PATH')
+    print(f"Ruta de Chromedriver: {driver_path}")
     service = Service(executable_path=driver_path)
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")
+    # Habilitar el modo headless
+    options.add_argument("--headless")  # Importante para ejecución sin GUI
+
+    # User-Agent para imitar un navegador real
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
+
+    # Configuración para evitar la detección
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_experimental_option('excludeSwitches', ['enable-automation'])
     options.add_experimental_option('useAutomationExtension', False)
 
-    # Initialize Chrome driver in headless mode
+    # Inicializa el navegador Chrome en modo headless
     driver = webdriver.Chrome(service=service, options=options)
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
     try:
-        # Navigate to tracking page
+        # Navega a la página de seguimiento
         driver.get("https://www.zim.com/es/tools/track-a-shipment")
+        
+        # Introduce variaciones en el tiempo de espera para simular comportamiento humano
+        time.sleep(random.randint(2, 5))
+        
+        # Espera hasta que el botón de aceptación de cookies sea clickeable y haz clic
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "onetrust-accept-btn-handler"))
+        ).click()
 
-        # Wait for cookie acceptance button to be clickable and click
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.element_to_be_clickable((By.ID, "onetrust-accept-btn-handler"))).click()
-
-        # Simulate human-like mouse movement
+        # Movimiento humano del mouse
         action = ActionChains(driver)
-        tracking_input = wait.until(EC.presence_of_element_located((By.ID, "shipment-main-search-2")))
+        tracking_input = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "shipment-main-search-2"))
+        )
         action.move_to_element(tracking_input).click().perform()
-        wait.until(EC.presence_of_element_located((By.ID, "shipment-main-search-2")))
+        time.sleep(random.uniform(0.5, 1.5))
 
-        # Enter tracking number and press ENTER
+        # Introduce el número y presiona ENTER
         tracking_input.send_keys(tracking_number)
         tracking_input.send_keys(Keys.RETURN)
 
-        # Wait for search results to load
-        wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#trackShipment > div > div.routing-details")))
+        # Espera un poco antes de intentar hacer clic en seguir
+        time.sleep(2)
 
-        # Extract data
-        data_elements = driver.find_elements_by_css_selector("#trackShipment > div > div.routing-details")
+        # Intenta hacer clic en el botón de búsqueda
+        try:
+            follow_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, ".btn.btn-primary.chips-search-button"))
+            )
+            follow_button.click()
+        except WebDriverException as e:
+            print("No se pudo hacer clic en el botón de seguimiento:", e)
+
+        # Espera hasta que los resultados sean cargados
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, "#trackShipment > div > div.routing-details"))
+        )
+
+        # Extrae los datos
+        data_elements = driver.find_elements(By.CSS_SELECTOR, "#trackShipment > div > div.routing-details")
         details = [element.text for element in data_elements]
         return details
 
-    except (WebDriverException, TimeoutException) as e:
-        print("Error loading:", e)
+    except Exception as e:
+        print("Error al cargar:", e)
         return []
 
     finally:
-        # Close the browser after the session
+        # Cierra el navegador después de la sesión
         driver.quit()
 
 # Example function call
