@@ -15,16 +15,14 @@ def track_package(tracking_number):
     driver_path = r'J:\Desarrollo\python\driver\chromedriver.exe'
     service = Service(executable_path=driver_path)
     options = webdriver.ChromeOptions()
-
-    # User-Agent para imitar un navegador real
+    
+    # Configuración para correr Chrome en modo sin cabeza y optimizar el rendimiento en servidores
+    options.add_argument("--headless")  # Correr en modo sin cabeza
+    options.add_argument("--no-sandbox")  # Bypass OS security model
+    options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
 
-    # Configuración para evitar la detección
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_experimental_option('excludeSwitches', ['enable-automation'])
-    options.add_experimental_option('useAutomationExtension', False)
-
-    # Inicializa el navegador Chrome
+    # Inicializa el navegador Chrome con las opciones especificadas
     driver = webdriver.Chrome(service=service, options=options)
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
