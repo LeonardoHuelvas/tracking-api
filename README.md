@@ -13,3 +13,23 @@ Este proyecto es una API construida con Flask para el seguimiento de paquetes. P
 
 ## Instalación y Configuración
 1. Clonar el repositorio:
+
+git clone https://github.com/LeonardoHuelvas/tracking-api.git
+
+pip install -r requirements.txt
+
+3. Configurar el driver de Chrome:
+- Asegúrate de que el `chromedriver` esté en la ruta especificada en el script o actualiza la ruta según corresponda.
+
+## Uso
+Para iniciar la API, ejecuta:
+
+
+Esto iniciará un servidor local en `http://127.0.0.1:5000/`. Puedes acceder a la API mediante los siguientes endpoints:
+- Accede a `http://127.0.0.1:5000/` desde tu navegador para ver la página de inicio.
+- Envía un POST request a `http://127.0.0.1:5000/track` con un JSON que incluya un `trackingNumber`, por ejemplo:
+  ```json
+  {
+      "trackingNumber": "ZIMUMER2451448"
+  }
+
