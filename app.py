@@ -1,6 +1,8 @@
 import os
 from flask import Flask, jsonify, request, render_template
 import tracker
+from dotenv import load_dotenv
+load_dotenv() 
 
 app = Flask(__name__)
 API_KEY = os.getenv('API_KEY')
