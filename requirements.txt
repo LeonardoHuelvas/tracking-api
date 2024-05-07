@@ -1,0 +1,3 @@
+Flask 3.0.2
+selenium==3.141.0
+Python == 3.12.1
