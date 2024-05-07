@@ -10,6 +10,7 @@ app = Flask(__name__)  # Crea una instancia de la aplicación Flask
 api_key = os.environ.get("API_KEY")
 print(f"API Key: {api_key}")
 
+# Ruta para el aplicativo principal
 @app.route('/')
 def index():
     return render_template('index.html')  
