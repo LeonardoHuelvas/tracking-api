@@ -39,6 +39,9 @@
                     data: JSON.stringify({
                         trackingNumber: trackingNumber
                     }),
+                    headers: {
+                        'x-api-key': '8f3c4b6d9e1a2b3c4d5e6f7g8h9i0j'
+                    },
                     beforeSend: function () {
                         $('#result').text('Loading...');
                     },
@@ -51,7 +54,7 @@
                         }
                     },
                     error: function (error) {
-                        $('#result').text('Error: ' + error.responseText);
+                        $('#result').text('Error: ' + JSON.parse(error.responseText).message);
                     }
                 });
             });
