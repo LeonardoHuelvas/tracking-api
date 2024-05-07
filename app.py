@@ -8,7 +8,7 @@ import tracker
 load_dotenv()
 
 app = Flask(__name__)  # Crea una instancia de la aplicación Flask
-
+# Variable de entorno api key respuesta
 api_key = os.environ.get("API_KEY")
 print(f"API Key: {api_key}")
 

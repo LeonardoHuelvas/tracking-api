@@ -14,6 +14,7 @@ from selenium.common.exceptions import WebDriverException
 from dotenv import load_dotenv
 load_dotenv()
 
+# Función para el número de guía ingresada
 def track_package(tracking_number):
     driver_path = os.getenv('CHROMEDRIVER_PATH')
     print(f"Ruta de Chromedriver: {driver_path}")
