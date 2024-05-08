@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, render_template
-import tracker
+import tracker1
  
 
 load_dotenv()
@@ -24,7 +24,7 @@ def track():
     try:
         data = request.get_json()
         tracking_number = data['trackingNumber']
-        details = tracker.track_package(tracking_number)
+        details = tracker1.track_package(tracking_number)
         return jsonify({"status": "success", "details": details})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
