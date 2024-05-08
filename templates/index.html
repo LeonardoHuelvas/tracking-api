@@ -1,21 +1,22 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seguimiento de Paquetes</title>
+    <title>Package Tracker</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
 
 <body class="h-screen flex justify-center items-center bg-gray-200">
     <div class="max-w-md p-4 bg-white rounded shadow-md">
-        <h1 class="text-3xl font-bold mb-4">Seguimiento de Paquetes</h1>
+        <h1 class="text-3xl font-bold mb-4">Package Tracker</h1>
         <form id="trackingForm" class="flex flex-col">
-            <input type="text" name="trackingNumber" placeholder="Ingrese el número de seguimiento"
+            <input type="text" name="trackingNumber" placeholder="Enter tracking number"
                 class="p-2 pl-10 text-sm text-gray-600">
-            <button type="submit"
-                class="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Rastrear Paquete</button>
+            <button type="submit" class="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Track
+                Package</button>
         </form>
         <div id="result" class="mt-4 text-gray-600"></div>
     </div>
@@ -27,7 +28,7 @@
                 e.preventDefault();
                 var trackingNumber = $('input[name="trackingNumber"]').val();
                 if (trackingNumber.trim() === '') {
-                    $('#result').text('Por favor, introduzca un número de seguimiento.');
+                    $('#result').text('Please enter a tracking number.');
                     return;
                 }
 
@@ -38,24 +39,28 @@
                     data: JSON.stringify({
                         trackingNumber: trackingNumber
                     }),
+                    headers: {
+                        'x-api-key': '8f3c4b6d9e1a2b3c4d5e6f7g8h9i0j'
+                    },
                     beforeSend: function () {
-                        $('#result').text('Cargando...');
+                        $('#result').text('Loading...');
                     },
                     success: function (response) {
                         if (response.details && response.details.length > 0) {
                             let formattedResult = response.details.map(detail => `<p>${detail}</p>`).join('');
                             $('#result').html(formattedResult);
                         } else {
-                            $('#result').text('No se encontraron detalles para este número de seguimiento.');
+                            $('#result').text('No details found for this tracking number.');
                         }
                     },
                     error: function (error) {
-                        $('#result').text('Error: ' + error.responseText);
+                        $('#result').text('Error: ' + JSON.parse(error.responseText).message);
                     }
                 });
             });
         });
     </script>
+
 </body>
 
 </html>
