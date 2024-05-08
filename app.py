@@ -7,11 +7,23 @@ app = Flask(__name__)
 # Ruta para la página principal
 @app.route('/')
 def index():
+    """
+    Renderiza la plantilla 'index.html' como la página principal.
+
+    Retorna:
+    str: Contenido HTML de la página principal.
+    """
     return render_template('index.html')
 
 # Ruta para rastrear el paquete
 @app.route('/track', methods=['POST'])
 def track():
+    """
+    Maneja la solicitud de rastreo de paquetes.
+
+    Retorna:
+    str: Respuesta JSON que indica el estado del rastreo y los detalles del paquete.
+    """
     # Verificar la clave de la API
     api_key = os.environ.get("API_KEY")
     if not request.headers.get('x-api-key') == api_key:   

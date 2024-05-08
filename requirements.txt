@@ -1,3 +1,4 @@
 Flask 
 selenium 
 python-dotenv
+chromedriver-binary==126.0.6465.2.0
