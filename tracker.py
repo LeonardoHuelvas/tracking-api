@@ -1,33 +1,23 @@
 import os
-import stat
 import random
 import time
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException
 
-# No es necesario cargar variables de entorno si la ruta será fija
-# from dotenv import load_dotenv
-# load_dotenv()
-
 def track_package(tracking_number):
-    # Ruta fija al ChromeDriver en la carpeta 'driver' en la raíz
-    driver_path = 'I:\Desarrollo\proyecto\python-facebook\driver\chromedriver.exe'
-    print(f"Ruta de Chromedriver: {driver_path}")
+    driver_path = os.path.join(os.getcwd(), 'driver', 'chromedriver.exe')
     
     if not os.path.exists(driver_path):
-        raise Exception("El archivo chromedriver no existe en la ruta especificada.")
-    os.chmod(driver_path, os.stat(driver_path).st_mode | stat.S_IEXEC)
+        raise FileNotFoundError("El archivo chromedriver no existe en la ruta especificada.")
 
     service = Service(executable_path=driver_path)
     options = webdriver.ChromeOptions()
-    # Asegúrate de que la ruta al binario de Chrome sea correcta si no está en la ubicación predeterminada
-    # options.binary_location = "RUTA_A_TU_CHROME.EXE"
     options.add_argument("--headless")
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
     options.add_argument("--disable-blink-features=AutomationControlled")

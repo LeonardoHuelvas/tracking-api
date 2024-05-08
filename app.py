@@ -1,30 +1,30 @@
 import os
-from dotenv import load_dotenv
 from flask import Flask, jsonify, request, render_template
-import tracker1
- 
+import tracker
 
-load_dotenv()
+app = Flask(__name__)
 
-app = Flask(__name__)  # Crea una instancia de la aplicación Flask
-# Variable de entorno api key respuesta
-api_key = os.environ.get("API_KEY")
-print(f"API Key: {api_key}")
-
-# Ruta para el aplicativo principal
+# Ruta para la página principal
 @app.route('/')
 def index():
-    return render_template('index.html')  
+    return render_template('index.html')
 
+# Ruta para rastrear el paquete
 @app.route('/track', methods=['POST'])
 def track():
+    # Verificar la clave de la API
+    api_key = os.environ.get("API_KEY")
     if not request.headers.get('x-api-key') == api_key:   
         return jsonify({"status": "error", "message": "Invalid API key"}), 403
 
     try:
+        # Obtener datos de la solicitud
         data = request.get_json()
         tracking_number = data['trackingNumber']
-        details = tracker1.track_package(tracking_number)
+        
+        # Rastrear el paquete usando la función en tracker
+        details = tracker.track_package(tracking_number)
+
         return jsonify({"status": "success", "details": details})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
