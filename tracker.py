@@ -8,10 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException
-import chromedriver_autoinstaller  # type: ignore # Importa la biblioteca de autoinstalación de ChromeDriver
-
-# Llama a la función de autoinstalación de chromedriver
-chromedriver_autoinstaller.install()
+import chromedriver_binary   
 
 def track_package(tracking_number):
     service = Service()  
