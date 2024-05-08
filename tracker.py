@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def track_package(tracking_number):
+    options.binary_location = './driver/chromedriver'
     driver_path = os.getenv('CHROMEDRIVER_PATH')
     print(f"Ruta de Chromedriver: {driver_path}")
     
