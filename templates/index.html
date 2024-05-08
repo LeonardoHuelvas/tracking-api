@@ -50,6 +50,7 @@
                             let formattedResult = response.details.map(detail => `<p>${detail}</p>`).join('');
                             $('#result').html(formattedResult);
                         } else {
+                            <!-- # mensaje de error -->
                             $('#result').text('No details found for this tracking number.');
                         }
                     },
