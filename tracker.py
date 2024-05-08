@@ -16,7 +16,7 @@ load_dotenv()
 
 def track_package(tracking_number):
     # Asumimos que la ruta al binario de Chrome es conocida y correcta para el entorno de despliegue
-    chrome_binary_path = '/ruta/a/google-chrome'  # Cambia esto por la ruta real al ejecutable de Chrome si es necesario
+    chrome_binary_path = os.environ.get('CHROME_DRIVER_PATH')  # Cambia esto por la ruta real al ejecutable de Chrome si es necesario
 
     # Obtener la ruta del Chromedriver desde la variable de entorno
     driver_path = os.getenv('CHROMEDRIVER_PATH', './driver/chromedriver')
