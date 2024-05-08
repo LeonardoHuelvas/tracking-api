@@ -15,16 +15,23 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def track_package(tracking_number):
-    driver_path = os.getenv('CHROMEDRIVER_PATH')
+    # Asumimos que la ruta al binario de Chrome es conocida y correcta para el entorno de despliegue
+    chrome_binary_path = '/ruta/a/google-chrome'  # Cambia esto por la ruta real al ejecutable de Chrome si es necesario
+
+    # Obtener la ruta del Chromedriver desde la variable de entorno
+    driver_path = os.getenv('CHROMEDRIVER_PATH', './driver/chromedriver')
     print(f"Ruta de Chromedriver: {driver_path}")
     
+    # Comprobar existencia del archivo y permisos
     if not os.path.exists(driver_path):
-        raise Exception("El archivo chromedriver no existe en la ruta especificada.")
+        raise FileNotFoundError("El archivo chromedriver no existe en la ruta especificada.")
     os.chmod(driver_path, os.stat(driver_path).st_mode | stat.S_IEXEC)
 
+    # Configuración del servicio y opciones de Chrome
     service = Service(executable_path=driver_path)
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
+    options.binary_location = chrome_binary_path
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_experimental_option('excludeSwitches', ['enable-automation'])
@@ -55,5 +62,3 @@ def track_package(tracking_number):
         return []
     finally:
         driver.quit()
-
-
