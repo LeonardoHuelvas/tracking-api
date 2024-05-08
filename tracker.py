@@ -15,35 +15,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def track_package(tracking_number):
-    # Ensure CHROME_DRIVER_PATH environment variable is set
-    chrome_binary_path = os.environ.get('CHROME_DRIVER_PATH')
-    if not chrome_binary_path:
-        # Set a default path if the environment variable is not set (optional)
-        chrome_binary_path = './driver/chromedriver'  # Replace with your actual path
+    driver_path = os.getenv('CHROMEDRIVER_PATH')
+    print(f"Ruta de Chromedriver: {driver_path}")
+    
+    if not os.path.exists(driver_path):
+        raise Exception("El archivo chromedriver no existe en la ruta especificada.")
+    os.chmod(driver_path, os.stat(driver_path).st_mode | stat.S_IEXEC)
 
-    # Verify existence and permissions of the Chromedriver file
-    if not os.path.exists(chrome_binary_path):
-        raise FileNotFoundError("El archivo chromedriver no existe en la ruta especificada.")
-    os.chmod(chrome_binary_path, os.stat(chrome_binary_path).st_mode | stat.S_IEXEC)
-
-    # Configure Chrome service and options
-    service = Service(executable_path=chrome_binary_path)
+    service = Service(executable_path=driver_path)
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
-    options.binary_location = chrome_binary_path  # Ensure this is a string path
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_experimental_option('excludeSwitches', ['enable-automation'])
     options.add_experimental_option('useAutomationExtension', False)
-
-    # Initialize the Chrome driver
-    driver = webdriver.Chrome(service=service, options=options)
-    driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-
-    # Your web scraping or automation code using the driver goes here...
-
-    # (Rest of your code remains the same)
-
 
     driver = webdriver.Chrome(service=service, options=options)
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
