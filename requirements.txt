@@ -1,4 +1,4 @@
 Flask 
 selenium 
 python-dotenv
- 
+chromedriver-binary 
